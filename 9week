@@ -1,0 +1,45 @@
+9.	Implement operations such as listing topics, modifying configurations, and deleting topics.
+
+package org.example;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.ListTopicsResult;
+import org.apache.kafka.clients.admin.NewPartitions;
+import org.apache.kafka.common.errors.TopicExistsException;
+import java.util.Collections;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+public class topicconfig {
+    public static void main(String[] args) throws ExecutionException, InterruptedException
+    {
+   
+        Properties properties = new Properties();
+        properties.put("bootstrap.servers","localhost:9092");
+        AdminClient adminClient=AdminClient.create(properties);
+        System.out.println("FOLLOWING LIST OF TOPICS");
+        ListTopicsResult topics=adminClient.listTopics();
+        topics.names().get().forEach(System.out::println);
+
+        String topicName = "newtopic";
+        int newPartitionCount =2;
+        System.out.println("Changing Configuration ( partitions ) for Topic "+ topicName);
+
+
+        try( AdminClient adminClient1 = AdminClient.create(properties)) 
+{
+            NewPartitions newPartitions = NewPartitions.increaseTo(newPartitionCount);
+            adminClient1.createPartitions(Collections.singletonMap(topicName, newPartitions)).all().get();
+            System.out.println("Successfully increased partitions for topic: " + topicName);
+      	 } 
+catch (InterruptedException | ExecutionException e)
+{
+           	 if (e.getCause() instanceof TopicExistsException) 
+{
+                System.out.println("Topic already exists: " + topicName);
+            } else {
+                System.err.println("Error increasing partitions: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+}
