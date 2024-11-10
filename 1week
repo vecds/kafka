@@ -1,0 +1,40 @@
+1. Install Apache Kafka on a single node.
+
+To install Apache Kafka on Windows, follow these steps:
+
+1. Install Java Development Kit (JDK):
+•	Download the latest JDK from Oracle's official website: https://www.oracle.com/java/technologies/downloads/
+•	Follow the installation instructions provided with the JDK.
+•	Set the JAVA_HOME environment variable to point to the JDK installation directory.
+•	Open command prompt and type “java –version” to check java installed.
+
+2. Download Apache Kafka:
+•	Visit the Apache Kafka downloads page: https://kafka.apache.org/downloads
+•	Download the latest stable Scala Binaries release for Windows.
+ 
+3. Extract the Downloaded File:
+•	Extract the downloaded ZIP file to a desired location on your system.
+
+4. Set Environment Variables:
+•	Under "System variables", create a new variable named "KAFKA_HOME" and set its value to the directory where you extracted the Kafka files.
+•	Edit the "Path" variable and add the following paths:
+o	%KAFKA_HOME%\bin
+o	%KAFKA_HOME%\bin\windows
+
+Kafka configuration
+Copy the path of the Kafka folder. Now go to config inside kafka folder and open zookeeper.properties file. Copy the path against the field dataDir and add /zookeeper-data to the path.
+ 
+For example if the path is c:/kafka
+Now in the same folder config open server.properties and scroll down to log.dirs and paste the path. To the path add /kafka-logs
+ This completes the configuration of zookeeper and kafka server.
+
+5. Start the Kafka Broker:
+Now open command prompt and change the directory to the kafka folder. First start zookeeper using the command given below:
+.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+
+Now open another command prompt and change the directory to the kafka folder. Run kafka server using the command:
+.\bin\windows\kafka-server-start.bat  .\config\server.properties
+
+If the Kafka server starts successfully, you've installed it correctly. Now kafka is running and ready to stream data.
+The broker will start listening on the port specified in the server.properties file (usually default broker.id: 0 & port:9092).
+These are the basic steps to install and use Apache Kafka on single node.
