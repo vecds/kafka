@@ -1,0 +1,67 @@
+3. Extend the cluster to multiple brokers on a single node
+
+Multiple Brokers in Kafka
+To start a multiple broker cluster environment.
+•	Create new server.properties files for every new broker.
+Example: Previous port no. was 9092 and broker-id was 0, Kafka log directory was kafka-logs
+Setting up a cluster (configuration)
+ Create duplicate copies of the server.properties file in the config directory under your Kafka installation. Rename them with server1.properties, server2.properties.
+ Edit each copy to assign a unique broker ID, listener port, and log directory. 
+ 
+Creating new Broker-1
+Follow these steps to add a new broker.
+Do the following changes in the file server1.properties.
+1.	change id to 1
+2. Changing port no. to 9093 and auto-create to false
+3. change log directory to Kafka-log-1
+ 
+Example: server1.properties
+broker.id=1
+listeners=PLAINTEXT://localhost:9093
+log.dirs=c:/kafka/kafka-logs-1
+
+Creating new Broker-2
+Please follow to same set up for new broker-2
+Edit: server-2.properties
+broker.id=2
+listeners=PLAINTEXT://localhost:9094
+log.dirs=c:/kafka/kafka-logs-2
+Starting up these 2 Kafka brokers
+
+Note: Please keep your existing Kafka broker and Zookeeper running.
+
+1.	starting the first broker
+.\bin\windows\kafka-server-start.bat .\config\server1.properties
+2. starting the second broker
+.\bin\windows\kafka-server-start.bat .\config\server2.properties
+
+Kafka Cluster
+So we have successfully started 3 Kafka brokers and now we have a Kafka cluster that is up and running in our machine with 3 brokers.
+ 
+Running 3 brokers simultaneously.
+Creating new Topic
+Now create a new topic, then we will produce and consume the messages with our new cluster setup.
+
+bin\windows\kafka-topics.bat --create --topic MultiNodesTest --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3 
+or you can mention bootstrap-servers port numbers separated with commas 
+bin\windows\kafka-topics.bat --create --topic MultiNodes --bootstrap-server localhost:9092,localhost:9093,localhost:9094 --partitions 3 --replication-factor 3
+ 
+Describe the topic 
+  
+a new topic is created
+•	The --replication-factor 3 is used here and normally it is recommended to use if you are using a cluster setup and this value will be either equal to or less than brokers that you have in a Kafka cluster. Here we have 3 brokers right? So I am going to replication-factor 3
+•	We will topic name to test-topic-replicated from test-topic
+•	The partition we will keep is partitions 3 , we are just keeping in sync with the numbers of brokers that we have. It doesn't matter you can have n number of values you have, I am just giving the partition value 3 here.
+Produce the messages using console producer.
+Open new command promt and type the following command:
+bin\windows\kafka-console-producer.bat --topic MultiNodes --bootstrap-server localhost:9092
+ 
+Instantiate a new Consumer to receive the messages.
+bin\windows\kafka-console-consumer.bat --topic MultiNodes --bootstrap-server localhost:9093 --from-beginning
+ 
+Now whatever message we have sent is received to console consumers. Now the interesting part is that we have 3 new Kafka folders right? Let’s go ahead and check that what we have in it.
+Log directories
+•	close the producer console now and you know have created a kafka-logs-1 and kafka-logs-2 directories are created.
+ 
+•	Now each broker got a new folder and that is where it is actually persisting all the messages that are produced to a particular broker. So we have three different directories for each and every broker.
+•	Conclusion: we have successfully a Kafka Cluster with 3 brokers and created a topic in the cluster and successfully produced and consumed the messages into the Kafka cluster.
