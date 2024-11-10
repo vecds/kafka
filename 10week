@@ -1,0 +1,58 @@
+10.	Introduce Kafka Connect and demonstrate how to use connectors to integrate with external systems.
+
+Kafka Connect is a tool to reliably stream data between Kafka topic and external datastores using out of the box libraries, 
+without writing even a single line of code. It is usually used to replicate data between standard external datastores, 
+for example excel to MySql , via Kafka topic in between.
+
+Following are the steps to stream data from a source file to a target file using Kafka FileStream Connectors.
+Prerequisite
+Install Kafka as per this guideline. Kafka connect comes along with standard Kafka installation, so no need to install it separately.
+
+Step 1
+Start zookeeper server from Kafka installation bin directory using below command.
+./zookeeper-server-start.bat ./config/zookeeper.properties
+
+Step 2
+Start Kafka server from Kafka installation bin directory using below command.
+./kafka-server-start.bat ./config/server.properties
+
+Step 3
+Add “connect-file-3.3.2.jar” to plugin.path in “config/connect-standalone.properties” file as per below 
+(Replace your installation directory accordingly). 
+
+This jar version could be different if you are working on different Kafka version than here. 
+Replace JsonConvertor with String convertor for data transfer for text document.
+
+key.converter=org.apache.kafka.connect.storage.StringConverter
+value.converter=org.apache.kafka.connect.storage.StringConverter
+plugin.path=C:/kafka/libs/connect-file-3.8.0.jar
+
+
+Step 4
+Create a source file (source.txt) and update “config/connect-file-source.properties” file accordingly. 
+Save changes as below.
+
+name=local-file-source
+connector.class=FileStreamSource
+tasks.max=1
+file=C:/kafka/connect/source.txt
+topic=connect-test
+
+Step 5
+Create a target file(target.txt) and update “config/connect-file-sink.properties” file accordingly. 
+Save changes as below.
+
+name=local-file-sink
+connector.class=FileStreamSink
+tasks.max=1
+file=C:/kafka/connect/target.txt
+topics=connect-test
+
+Step 6
+Start Kafka connector in standalone mode using below command from Kafka installation bin directory.
+
+.\bin\windows\connect-standalone.bat .\config\connect-standalone.properties .\config\connect-file-source.properties .\config\connect-file-sink.properties
+
+Once successfully up, any change made on the source file will immediately reflect on the target file. 
+Kafka connect FileStreamSource will stream any change in the source file into kafka topic. 
+And FileStreamSink will steam it from kafka topic into the target file.
