@@ -1,0 +1,77 @@
+5.Implement sending messages both synchronously and asynchronously in the producer.
+
+ASYNCHRONOUS MESSAGE
+
+package org.example;
+
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+import java.util.Properties;
+
+public class async {
+
+    public static void main(String[] args) {
+
+        Properties properties=new Properties();
+        properties.put("bootstrap.servers","localhost:9092");
+        properties.put("key.serializer", StringSerializer.class);
+        properties.put("value.serializer",StringSerializer.class);
+
+        KafkaProducer producer=new KafkaProducer(properties);
+
+        ProducerRecord record=new ProducerRecord("newtopic","Asyncronous message ");
+
+
+        int numEvents=100000;
+
+        for(int i=1;i<=numEvents;i++)
+        {
+            producer.send(new ProducerRecord("newtopic","Asynchrouns message no:" +i));
+        }
+    producer.close();
+    }
+}
+
+
+SYCHRONOUS MESSAGE
+package org.example;
+
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+import java.util.Properties;
+
+public class Synchronousmsg {
+    public static void main(String[] args) {
+
+        Properties properties=new Properties();
+        properties.put("bootstrap.servers","localhost:9092");
+        properties.put("key.serializer", StringSerializer.class);
+        properties.put("value.serializer",StringSerializer.class);
+
+        KafkaProducer producer=new KafkaProducer(properties);
+
+        ProducerRecord record=new ProducerRecord("newtopic","Synchronous message");
+
+        int numEvents=100000;
+
+//CAN BE EXECUTED WITHOUT TRY AND CATCH
+        try {
+
+        for (int i=1;i<=numEvents;i++)
+        {
+            ProducerRecord record1=new ProducerRecord("newtopic","Synchronous message  no: " +i);
+            producer.send(record1);
+            producer.flush();
+        }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+}
