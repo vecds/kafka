@@ -1,0 +1,27 @@
+7.	Write a script to create a topic with specific partition and replication factor settings.
+package org.example;
+
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.NewTopic;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+public class createTopicNpartitionNreplica {
+    public static void main(String[] args) {
+        Properties properties=new Properties();
+        properties.put("bootstrap.servers","localhost:9092");
+        
+
+        AdminClient adminClient=AdminClient.create(properties);
+        //creating 3 partitions with 1 replication factor
+        NewTopic newTopic=new NewTopic("topic-3partition-1replica",3,(short) 1);
+        List topic=new ArrayList();
+        topic.add(newTopic);
+        
+        adminClient.createTopics(topic);
+        adminClient.close();
+    }
+}
