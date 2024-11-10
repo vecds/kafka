@@ -5,7 +5,8 @@ To start a multiple broker cluster environment.
 •	Create new server.properties files for every new broker.
 Example: Previous port no. was 9092 and broker-id was 0, Kafka log directory was kafka-logs
 Setting up a cluster (configuration)
- Create duplicate copies of the server.properties file in the config directory under your Kafka installation. Rename them with server1.properties, server2.properties.
+ Create duplicate copies of the server.properties file in the config directory under your Kafka installation. 
+ Rename them with server1.properties, server2.properties.
  Edit each copy to assign a unique broker ID, listener port, and log directory. 
  
 Creating new Broker-1
@@ -49,9 +50,12 @@ bin\windows\kafka-topics.bat --create --topic MultiNodes --bootstrap-server loca
 Describe the topic 
   
 a new topic is created
-•	The --replication-factor 3 is used here and normally it is recommended to use if you are using a cluster setup and this value will be either equal to or less than brokers that you have in a Kafka cluster. Here we have 3 brokers right? So I am going to replication-factor 3
+•	The --replication-factor 3 is used here and normally it is recommended to use if you are using a cluster setup 
+  and this value will be either equal to or less than brokers that you have in a Kafka cluster. 
+  Here we have 3 brokers right? So I am going to replication-factor 3
 •	We will topic name to test-topic-replicated from test-topic
-•	The partition we will keep is partitions 3 , we are just keeping in sync with the numbers of brokers that we have. It doesn't matter you can have n number of values you have, I am just giving the partition value 3 here.
+•	The partition we will keep is partitions 3 , we are just keeping in sync with the numbers of brokers that we have. 
+  It doesn't matter you can have n number of values you have, I am just giving the partition value 3 here.
 Produce the messages using console producer.
 Open new command promt and type the following command:
 bin\windows\kafka-console-producer.bat --topic MultiNodes --bootstrap-server localhost:9092
@@ -59,7 +63,8 @@ bin\windows\kafka-console-producer.bat --topic MultiNodes --bootstrap-server loc
 Instantiate a new Consumer to receive the messages.
 bin\windows\kafka-console-consumer.bat --topic MultiNodes --bootstrap-server localhost:9093 --from-beginning
  
-Now whatever message we have sent is received to console consumers. Now the interesting part is that we have 3 new Kafka folders right? Let’s go ahead and check that what we have in it.
+Now whatever message we have sent is received to console consumers. Now the interesting part is that we have 3 new Kafka folders right? 
+Let’s go ahead and check that what we have in it.
 Log directories
 •	close the producer console now and you know have created a kafka-logs-1 and kafka-logs-2 directories are created.
  
