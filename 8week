@@ -1,0 +1,47 @@
+8.	Simulate fault tolerance by shutting down one broker and observing the cluster behavior.
+
+Kafka is a distributed system. The topic is divided into partitions and kept in different brokers. 
+If any broker fails, data should not be lost. For fault-tolerance purposes, the partition is replicated and stored in different brokers. 
+If leader brokers fail, then the controller will elects one of the replicas as the leader. 
+Even controller brokers can fail, in this case, Zookeeper will help in electing the broker as the controller.
+Fault tolerance in Kafka is done by copying the partition data to other brokers which are known as replicas.
+There is a configuration that specifies how many copies of the partition you need. Its called a replication factor.
+Each broker will hold one or more partitions. And each of these partitions can either be a replica or leader for the topic.
+All the writes and reads to a topic go through the leader and the leader coordinates to update replicas with new data.
+ 
+Replication
+In the above example, there are three brokers. For partition-1, Broker-1 is a leader. Broker-2 and Broker-3 are the replica brokers.
+The leader partitions and replica brokers are kept in separate brokers because if a leader partition goes down, one of the replica partition brokers can serve as the leader.
+But how are leaders elected? There should be somebody who is responsible for electing leaders in the Kafka cluster. 
+That’s where Controller brokers comes.
+
+Controller broker
+The controller Broker takes care of electing the leader broker for the partitions. 
+It’s just a normal broker with extra responsibility. There will be only one controller for the Kafka cluster. 
+The controller broker keeps track of brokers joining and leaving the cluster with the help of Zookeeper.
+ 
+controller
+As we saw earlier, Zookeeper is the centralized service for storing metadata of topic, partition, and broker. 
+Every time a broker starts up, it registers itself to the zookeeper. And the zookeeper keeps track of each broker by calling a health check on it. 
+Just like Kafka brokers, even Zookeepers run as a cluster, known as an ensemble.
+
+Leader partition election
+When the leader broker goes down,
+1.	The Zookeeper informs the Controller.
+2.	The controller selects one of the in-sync replicas (ISR) as the leader. ISR is a replica broker that is fully caught up with the changes of the leader broker. The leader is responsible for keeping track of ISR and sending this information to the zookeeper.
+3.	When the broker comes back up, then it will be assigned again as the leader.
+
+ 
+Leader failure
+In the above example, there is broker-1 which is down due to some issue. And the zookeeper keeps track of it because of health checks. Zookeeper sends a notification to the controller regarding the broker-1 unavailability.
+ 
+leader election
+The controller chooses one of the replica partitions as the leader for this partition. In the above example, it is broker-2. When the broker-1 comes back up, it will be assigned again as the leader.
+But what if the controller itself goes down?
+Controller election
+ 
+Controller failure
+When the controller goes down,
+•	Zookeeper informs all the brokers that the controller failed.
+•	All the brokers will apply to be the controller.
+•	The first broker who applies for this position will become the controller.
