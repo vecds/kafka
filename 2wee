@@ -1,0 +1,32 @@
+2.Demonstrate setting up a single-node, single-broker Kafka cluster and show basic operations such as creating topics and producing/consuming messages.
+
+Start Kafka Broker
+Open a Command prompt change to kafka directory and run the following command:
+.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+
+Now open a new terminal and run the following command:
+.\bin\windows\kafka-server-start.bat  .\config\server.properties
+
+Create a Topic:
+•	To create a new topic, run the following command:
+bin\windows\kafka-topics.bat --create  --topic my-topic --replication-factor 1 --partitions 1 --bootstrap-server localhost:9092
+ 
+Note: We can create any number of partitions depending upon requirement. The replication factor can never be greater than the number of available brokers.
+
+Describe Topic: To describe a topic within the broker, use '--describe' command as:
+bin\windows\kafka-topics.bat --describe --topic my-topic --bootstrap-server localhost:9092
+  
+Produce Messages:
+•	Create a console-based Kafka producer to send messages tothe message Kafka topic running at “localhost:9092”. To do this, open a new terminal and run the following command::
+
+bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9092 --topic my-topic
+A '>' will appear in the new line. Start producing some messages, as shown below:
+ 
+
+Consume Messages:
+o	Create a console-based Kafka consumer to retrieve messages from the message Kafka topic running at localhost:9092. To do this, open a new terminal and run the following command:
+bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic my-topic --from-beginning
+
+ 
+
+
