@@ -21,14 +21,18 @@ To install Apache Kafka on Windows, follow these steps:
 o	%KAFKA_HOME%\bin
 o	%KAFKA_HOME%\bin\windows
 
-Kafka configuration
-Copy the path of the Kafka folder. Now go to config inside kafka folder and open zookeeper.properties file. Copy the path against the field dataDir and add /zookeeper-data to the path.
+5. Kafka configuration
+Copy the path of the Kafka folder. Now go to "config" inside kafka folder and open zookeeper.properties file. Copy the path against the field "dataDir" 
+ and add /zookeeper-data to the path.
  
-For example if the path is c:/kafka
-Now in the same folder config open server.properties and scroll down to log.dirs and paste the path. To the path add /kafka-logs
- This completes the configuration of zookeeper and kafka server.
+For example if the path is C:/kafka -- add dataDir=C:\kafka\zookeeper-data
 
-5. Start the Kafka Broker:
+Now in the same "config" folder open server.properties and scroll down to log.dirs and paste the path. To the path add /kafka-logs
+For example if the path is C:/kafka -- add log.dirs=C:\kafka\kafka-log
+
+This completes the configuration of zookeeper and kafka server.
+
+6. Start the Kafka Broker:
 Now open command prompt and change the directory to the kafka folder. First start zookeeper using the command given below:
 .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
 
