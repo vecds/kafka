@@ -1,4 +1,4 @@
-7.	Write a script to create a topic with specific partition and replication factor settings.
+7.Write a script to create a topic with specific partition and replication factor settings.
 package org.example;
 
 import org.apache.kafka.clients.admin.AdminClient;
